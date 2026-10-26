@@ -41,7 +41,7 @@ export default function Hero() {
         src="/images/hero-soil.webp"
         alt=""
         aria-hidden="true"
-        fetchPriority="high"
+        fetchpriority="high"
         decoding="async"
         className="absolute inset-0 -z-30 h-full w-full object-cover object-center"
         style={{ transform: 'translate3d(0, calc(var(--sy, 0px) * 0.12), 0) scale(1.05)' }}

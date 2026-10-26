@@ -1,0 +1,10 @@
+{
+  "name": "paya-pooyesh-sabz-api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Minimal form-submission API for the Paya Pooyesh Sabz website.",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

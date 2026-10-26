@@ -33,5 +33,3 @@ export default function Reveal({ children, as: Tag = 'div', delay = 0, className
     </Tag>
   )
 }
-
-export { Link }

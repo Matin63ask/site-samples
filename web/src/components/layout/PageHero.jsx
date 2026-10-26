@@ -18,7 +18,7 @@ export default function PageHero({ eyebrow, title, intro, image, breadcrumb = []
           className="absolute inset-0 -z-10 h-full w-full object-cover opacity-45"
           loading="eager"
           decoding="async"
-          fetchPriority="high"
+          fetchpriority="high"
         />
       )}
       <div

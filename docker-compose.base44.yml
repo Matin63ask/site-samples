@@ -1,0 +1,57 @@
+# Development stack for the Paya Pooyesh Sabz website.
+# Both services run plain Node images with the repository bind-mounted, so edits
+# are reflected by Vite's dev server without rebuilding an image.
+name: paya-pooyesh-sabz
+
+services:
+  api:
+    image: node:22-alpine
+    working_dir: /app/server
+    command: ["node", "index.js"]
+    environment:
+      - PORT=4000
+      - DATA_FILE=/data/submissions.json
+    volumes:
+      - ./server:/app/server
+      - api_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:4000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: on-failure
+
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command:
+      - sh
+      - -ec
+      - npm ci --no-audit --no-fund && exec npm run dev -- --host 0.0.0.0 --port 3000
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      # Provided by the platform; passed through untouched.
+      - BASE44_PREVIEW_MODE
+      - BASE44_SANDBOX_HOST_DOMAIN
+      - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+      # The API lives on the compose network, behind the dev server's /api proxy.
+      - VITE_API_PROXY_TARGET=http://api:4000
+    volumes:
+      - ./web:/app
+      - web_node_modules:/app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    restart: on-failure
+
+volumes:
+  web_node_modules:
+  api_data:
